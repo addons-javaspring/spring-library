@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.fazz.library.exception.custom.NotFoundException;
 import com.fazz.library.exception.custom.NotProcessException;
+import com.fazz.library.exception.custom.UnauthorizedException;
 import com.fazz.library.model.dto.response.ResponseError;
 
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +50,14 @@ public class CustomExceptionHandler {
   public ResponseEntity<ResponseError> handleNotFound(NotProcessException e) {
     log.warn(e.getMessage());
     responseError = new ResponseError(HttpStatus.UNPROCESSABLE_ENTITY.value(), LocalDateTime.now(), e.getMessage(),
+        null);
+    return ResponseEntity.status(responseError.getStatus()).body(responseError);
+  }
+
+  @ExceptionHandler(value = UnauthorizedException.class)
+  public ResponseEntity<ResponseError> handleUnauthorized(UnauthorizedException e) {
+    log.warn(e.getMessage());
+    responseError = new ResponseError(HttpStatus.UNAUTHORIZED.value(), LocalDateTime.now(), e.getMessage(),
         null);
     return ResponseEntity.status(responseError.getStatus()).body(responseError);
   }
